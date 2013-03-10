@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>        
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>        
+        <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+        <style type="text/css" media="screen">               
+    #main {                     
+        position: absolute;
+        padding:0px;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0px;
+        vertical-align: bottom;
+    }
+    #control {
+        padding: 8px;
+        position: absolute;
+        height:48px;
+    }
+    #editor {         
+        position: absolute;
+        font-size: 1.2em;        
+        top: 48px;
+        left: 0;
+        right: 0;
+        bottom: 140px;
+        border-top: 1px solid lightgray;
+        border-bottom: 1px solid lightgray;
+    }
+    #log {
+        position: fixed;
+        padding-left: 4px;
+        right: 0px;
+        left: 0px;
+        bottom: 0px;
+        height: 140px;
+        overflow-y: auto;
+    }    
+    #title {
+        padding: 4px;
+        color: darkgray;
+        text-decoration: none;
+        font-size: 2em; 
+        position: fixed;   
+        height: 48px;
+    }
+    #toolbar {
+        position: fixed;
+        right: 20px;
+    }
+    .info {
+        color: gray;
+    }
+    .ok {
+        color: green;
+    }
+    .error {
+        color: red;
+    }
+    .btn, .btn-group {
+        margin-left: 8px;
+    }
+    pre {
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+        background: 0px;
+    }
+    .ui-dialog {
+        padding: 10px;
+        border: 2px solid lightgray;
+        border-radius: 5px;
+        background: white;        
+    }
+}    
+</style>
+</head>
+<body>
+<div id="main"> 
+    <div id="control">
+            <a id="title" href="">
+            </a>     
+            <div id="toolbar">
+                <button id="reformat" title="Reformat (Ctr-Shift-F)" class="btn"><i class="icon-align-left"></i></button>
+                <div class="btn-group">                
+                    <button id="save" title="Save (Ctrl-S)" class="btn"><i class="icon-ok"></i></button>
+                    <button id="delete" title="Delete" class="btn"><i class="icon-trash"></i></button>
+                    <button id="reload" title="Reload" class="btn"><i class="icon-refresh"></i></button>
+                </div>
+                <!--
+                <button id="load" title="Load from File" class="btn"><i class="icon-folder-open"></i></button>
+                <button id="upload" title="Upload File" class="btn"><i class="icon-arrow-up"></i></button>
+                -->
+            </div>
+    </div> 
+    <div id="editor-container">
+        <div id="editor"></div>
+    </div>
+    <div id="log"></div>      
+</div>
+        
+<script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    function reformat() {
+        try {
+            var pos = editor.getCursorPosition();
+            var json = JSON.parse(editor.getSession());
+            editor.getSession().setValue(JSON.stringify(json, null, 2));    
+            editor.navigateTo(pos.row, pos.column);
+        } catch(err) {
+            // ignore
+        }
+    }
+    
+    function logReq(text) {
+        log('<pre class="info">'+text+'</pre>');
+    }
+    
+    function logOk(text) {
+        log('<pre class="ok">'+text+'</pre><br>');
+    }
+    
+    function logError(text) {
+        log('<pre class="error">'+text+'</pre><br>');
+        console.log(text);
+    }
+    
+    function log(html) {
+        $("#log").append(html);
+        $("#log").scrollTop($("#log")[0].scrollHeight);
+    }
+    
+    function get() {
+        logReq("GET "+uri);
+        p = $.ajax(uri, { dataType:"text" });        
+        p.done( function(data, status, xhr) 
+            { 
+                logOk(xhr.status+" "+xhr.statusText);
+                editor.getSession().setValue(data);
+                reformat();
+            });
+        p.fail( function(xhr, status, err) 
+            { 
+                logError(xhr.status+" "+xhr.statusText+"\n"+xhr.responseText);            
+            });                
+    }
+    
+    function put() {
+        logReq("PUT "+uri);
+        p = $.ajax(uri, { 
+            method: "PUT", 
+            data: editor.getSession().getValue(),
+            processData: false            
+        });        
+        p.done( function(data, status, xhr) 
+            { 
+                logOk(xhr.status+" "+xhr.statusText);
+            });
+        p.fail( function(xhr, status, err) 
+            { 
+                logError(xhr.status+" "+xhr.statusText+"\n"+xhr.responseText);               
+            });           
+    }
+    
+    function del() {
+        $.confirm("Are you sure you want to delete this resource?", "Confirm Delete", 
+            function() {
+                logReq("DELETE "+uri);
+                p = $.ajax(uri, { 
+                    method: "DELETE"
+                });        
+                p.done( function(data, status, xhr) 
+                    { 
+                        logOk(xhr.status+" "+xhr.statusText);
+                    });
+                p.fail( function(xhr, status, err) 
+                    { 
+                        logError(xhr.status+" "+xhr.statusText+"\n"+xhr.responseText);            
+                    });                   
+            });
+    }
+
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/tomorrow");
+    editor.getSession().setMode("ace/mode/json");
+    editor.getSession().setTabSize(2);
+    editor.getSession().setUseSoftTabs(true);
+
+    editor.commands.addCommand({
+        name: "reformat",
+        bindKey: {win: "Ctrl-Shift-F", mac: "Command-Shift-F"},
+        exec: reformat
+    });
+    
+        editor.commands.addCommand({
+        name: "reformat",
+        bindKey: {win: "Ctrl-S", mac: "Command-S"},
+        exec: put
+    });
+    
+    $.extend({
+        confirm: function(message, title, okAction) {
+            $("<div></div>").dialog({
+                // Remove the closing 'X' from the dialog
+                open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); }, 
+                buttons: {
+                    "Ok": function() {
+                        $(this).dialog("close");
+                        okAction();
+                    },
+                    "Cancel": function() {
+                        $(this).dialog("close");
+                    }
+                },
+                close: function(event, ui) { $(this).remove(); },
+                resizable: false,
+                title: title,
+                modal: true
+            }).text(message);
+        }
+    });
+    
+    var uri = window.location.hash;
+    if(uri) {
+        uri = uri.substring(1,uri.length);
+        if(uri.lastIndexOf("/") == uri.length-1) {
+            lastSlash = uri.substring(0,uri.length-1).lastIndexOf("/");
+        } else {        
+            lastSlash = uri.lastIndexOf("/");
+        }
+        if(lastSlash == -1) {
+            lastSlash=0;
+        }
+        var name = uri.substring(lastSlash+1);
+        document.title = name;
+    } else {
+        logError("No url specified after # in query string");
+        return;
+    }
+    $().ready(function() {
+        $("#reformat").click(reformat);    
+        $("#reload").click(get);    
+        $("#save").click(put);    
+        $('#delete').click(del);        
+        $("#title").attr("href", uri);
+        $("#title").html(name)        
+        get();
+	});
+</script>
+</body>
+</html>
