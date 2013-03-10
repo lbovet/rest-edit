@@ -11,6 +11,11 @@ Features
 * Syntax highlighting and checking (thanks to http://ace.ajax.org)
 * Log panel showing requests and errors
 
+Screenshots
+-----------
+![example 1](https://github.com/lbovet/rest-edit/blob/master/doc/rest-edit1.png?raw=true)
+![example 1](https://github.com/lbovet/rest-edit/blob/master/doc/rest-edit2.png?raw=true)
+
 Usage
 -----
 
@@ -24,7 +29,4 @@ Work on a new resource ``/myproject/rest-api/persons/bob``
 
     http://localhost:8080/myproject/rest-edit/editor.html?new=true#/myproject/rest-api/persons/bob
     
-Screenshots
------------
-!(https://github.com/lbovet/rest-edit/blob/master/doc/rest-edit1.png?raw=true)
-!(https://github.com/lbovet/rest-edit/blob/master/doc/rest-edit2.png?raw=true)
+
