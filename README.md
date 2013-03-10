@@ -3,8 +3,6 @@ rest-edit
 
 This is a pure HTML5/Javascript editor for JSON REST resources.
 
-Just copy it to your web files and enjoy editing your PUTable REST resources, simply by giving their path as # parameter.
-
 Features
 --------
 * GET
@@ -13,8 +11,10 @@ Features
 * Syntax highlighting and checking (thanks to http://ace.ajax.org)
 * Log panel showing requests and errors
 
-URL
----
+Usage
+-----
+
+Just copy it to your web files and enjoy editing your PUTable REST resources, simply by giving their path as # parameter.
 
 Work on an existing resource ``/myproject/rest-api/persons/alice``
 
