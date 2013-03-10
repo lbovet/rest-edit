@@ -26,4 +26,5 @@ Work on a new resource ``/myproject/rest-api/persons/bob``
     
 Screenshots
 -----------
-
+!(https://github.com/lbovet/rest-edit/blob/master/doc/rest-edit1.png?raw=true)
+!(https://github.com/lbovet/rest-edit/blob/master/doc/rest-edit2.png?raw=true)
