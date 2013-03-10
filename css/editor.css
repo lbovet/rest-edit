@@ -1,0 +1,70 @@
+#main {                     
+    position: absolute;
+    padding:0px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0px;
+    vertical-align: bottom;
+}
+#control {
+    padding: 8px;
+    position: absolute;
+    height:48px;
+}
+#editor {         
+    position: absolute;
+    font-size: 1.2em;        
+    top: 48px;
+    left: 0;
+    right: 0;
+    bottom: 140px;
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+}
+#log {
+    position: fixed;
+    padding-left: 4px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+    height: 140px;
+    overflow-y: auto;
+}    
+#title {
+    padding: 4px;
+    color: darkgray;
+    text-decoration: none;
+    font-size: 2em; 
+    position: fixed;   
+    height: 48px;
+}
+#toolbar {
+    position: fixed;
+    right: 20px;
+}
+.info {
+    color: gray;
+}
+.ok {
+    color: green;
+}
+.error {
+    color: red;
+}
+.btn, .btn-group {
+    margin-left: 8px;
+}
+pre {
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+    background: 0px;
+}
+.ui-dialog {
+    padding: 10px;
+    border: 2px solid lightgray;
+    border-radius: 5px;
+    background: white;        
+}
+}    
