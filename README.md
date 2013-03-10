@@ -11,6 +11,7 @@ Features
 * PUT
 * DELETE
 * Syntax highlighting and checking (thanks to http://ace.ajax.org)
+* Autoformat
 * Log panel showing requests and errors
 
 Usage
