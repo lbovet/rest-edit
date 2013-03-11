@@ -18,7 +18,7 @@ function logOk(text) {
 }
 
 function logError(text) {
-    log('<pre class="error">'+text+'</pre><br>');
+    log('<pre class="error">'+$('<div/>').text(text).html()+'</pre><br>');
 }
 
 function log(html) {
@@ -57,7 +57,7 @@ function put() {
         });
     p.fail( function(xhr, status, err) 
         { 
-            logError(xhr.status+" "+xhr.statusText+"\n"+xhr.responseText);               
+            logError(xhr.status+" "+xhr.statusText+"\n"+ ((status==400 || status >= 500) ? xhr.responseText : ""));               
         });           
 }
 
