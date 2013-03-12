@@ -9,10 +9,12 @@ Features
 --------
 * GET
 * PUT
+* POST
 * DELETE
 * Syntax highlighting and checking (thanks to http://ace.ajax.org)
 * Autoformat
 * Log panel showing requests and errors
+* Set HTTP headers
 
 Usage
 -----
