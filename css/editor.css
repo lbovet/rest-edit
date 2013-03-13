@@ -37,6 +37,7 @@
     left: 0px;
     bottom: 0px;
     height: 140px;
+    overflow: auto;
 }    
 #title {
     padding: 4px;

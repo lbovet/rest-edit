@@ -132,31 +132,42 @@ function addHeader(header, star) {
 	});
 	$(".header-star").unbind("click");
 	$(".header-star").click( function() {
-		var header = $(this).siblings(".header-value").text();
-		$(this).toggleClass("icon-star");
-		$(this).toggleClass("icon-star-empty");
-		var headers = $.cookie("headers") || [];			
-		if($(this).hasClass("icon-star")) {
-			if($.inArray(header, headers)==-1) {
-				headers.push(header);
-				$.cookie("headers", headers);
-			}
-		} else {
-			var pos = $.inArray(header, headers);
-			if(pos != -1) {
-				headers.splice(pos, 1);
-				$.cookie("headers", headers);
-				console.log("done");
-			}
-		}
+		toggleStar($(this).parent());
 	});	
 	$(".header-value").click( function() {
 		$("#new-header").val($(this).text());
+		removeStar($(this).text());
 		$(this).parent().remove();
 		openHeader();
 		updateHeaderBar();		
 	});
 	$("#editor").css("top", "80px");	
+}
+
+function toggleStar(headerElement) {
+	var header = headerElement.children(".header-value").text();
+	var star = headerElement.children(".header-star");
+	star.toggleClass("icon-star");
+	star.toggleClass("icon-star-empty");
+	var headers = $.cookie("headers") || [];			
+	if(star.hasClass("icon-star")) {
+		removeStar(header);
+	} else {
+		var pos = $.inArray(header, headers);
+		if(pos != -1) {
+			headers.splice(pos, 1);
+			$.cookie("headers", headers);
+			console.log("done");
+		}
+	}	
+}
+
+function removeStar(header) {
+	var headers = $.cookie("headers") || [];			
+	if($.inArray(header, headers)==-1) {
+		headers.push(header);
+		$.cookie("headers", headers);
+	}
 }
 
 function updateHeaderBar() {
