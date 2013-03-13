@@ -26,18 +26,36 @@
     top: 48px;
     left: 0;
     right: 0;
-    bottom: 140px;
+    bottom: 144px;
     border-top: 1px solid lightgray;
-    border-bottom: 1px solid lightgray;
 }
-#log {
-    position: fixed;
-    padding-left: 4px;
+#splitter {
+	position: absolute;
+	background: lightgray;
+	top: 0;
+    left: 0;
+    right: 0;
+	height: 4px;	
+    z-index: 3;
+    cursor: row-resize;
+}
+#log-container {
+	position: absolute;
     right: 0px;
     left: 0px;
     bottom: 0px;
-    height: 140px;
-    overflow: auto;
+    height: 140px;	
+}
+#log {
+	position: absolute;
+	padding-top:4px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+    top: 0px;	
+	background: white;    
+    padding-left: 4px;
+    overflow: auto;    
 }    
 #title {
     padding: 4px;

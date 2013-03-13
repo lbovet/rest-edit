@@ -18,10 +18,10 @@
 		                <button id="reformat" title="Reformat (Ctr-Shift-F)" class="btn"><i class="icon-align-left"></i></button>
 						<button id="header-button" title="Add Header" class="btn"><i class="icon-list"></i></button>
 						<div id="new-header-container" class="input-append" style="margin-bottom: 0px">			
-							<form id="new-header-form">
+							<form id="new-header-form" action="javascript:">
 								<fieldset id="new-header-fieldset">
 									<input autocomplete="on" id="new-header" type="text" placeholder="New Header&hellip;">
-									<button type="submit" id="header-button-active" class="btn active"><i class="icon-list"></i></button>
+									<button id="header-button-active" class="btn active"><i class="icon-list"></i></button>
 								</fieldset>
 							</form>
 						</div>
@@ -40,7 +40,10 @@
 		         	</div>
             </div> 
             <div id="editor"></div>
-            <div id="log"></div>      
+            <div id="log-container">
+		    	<div id="splitter"></div>            
+            	<div id="log"></div>      
+            </div>
         </div>                
         <script src="js/ace.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/editor.js"></script>

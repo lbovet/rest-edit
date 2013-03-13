@@ -36,12 +36,13 @@ function get() {
             var type=xhr.getResponseHeader("Content-Type");
             if(type && type.indexOf("application/json") != -1) {
 				editor.getSession().setMode("ace/mode/json");
+				editor.getSession().setValue(data);
 				reformat();
             } else {
 				editor.getSession().setMode("ace/mode/text");
 				$("#reformat").hide();
-            }
-            editor.getSession().setValue(data);
+				editor.getSession().setValue(data);
+            }            
         });
     p.fail( function(xhr, status, err) 
         { 
@@ -186,18 +187,19 @@ function getHeaders() {
 }
 
 function switchMode() {
+	window.onhashchange = function() {};
 	if(!postMode) {
-		window.location = window.location.href.replace(/\??.[^#]*#/, "?mode=post#");	
+		window.location.assign(window.location.href.replace(/\??.[^#]*#/, "?mode=post#"));	
 	} else {		
-		window.location = window.location.href.replace(/mode=post/, "");	
+		window.location.assign(window.location.href.replace(/mode=post/, ""));	
 	}
 }
 
 function initEmpty() {
 	editor.getSession().setMode("ace/mode/json");
 	$("#title").css({ "font-style": "italic" });
-	editor.getSession().setValue("{}");
-	editor.navigateTo(0, 1);   
+	editor.getSession().setValue("{\n\t\n}");
+	editor.navigateTo(1, 1);   
 }
 
 function init() {
@@ -216,7 +218,18 @@ function init() {
 	    }
 	    var docName = uri.substring(lastSlash+1);
 	    document.title = docName;    
-	
+		var create = window.location.search.indexOf("new=true") != -1;
+	    postMode = window.location.search.indexOf("mode=post") != -1;
+
+		var logSize = $.cookie("log-size");
+		if(logSize) {
+			if(logSize > $(window).height() -100) {
+				logSize = $(window).height() -100;
+			}
+			$("#log-container").css("height", logSize);				
+			$("#editor").css("bottom", logSize);
+		}
+		
 		editor = ace.edit("editor");
 		editor.setTheme("ace/theme/tomorrow");
 		editor.getSession().setTabSize(2);
@@ -229,10 +242,10 @@ function init() {
 		});
 
 		editor.commands.addCommand({
-		    name: "save",
-		    bindKey: {win: "Ctrl-S", mac: "Command-S"},
-		    exec: put
-		});	
+			name: "save",
+			bindKey: {win: "Ctrl-S", mac: "Command-S"},
+			exec: postMode ? function() { logError("Use Ctrl-Enter to Post"); } : put
+		});
 		
 	    $("#reformat").click(reformat);    
 	    $("#reload").click(get);    
@@ -252,9 +265,25 @@ function init() {
 		});
 	    $("#title").attr("href", uri);
 	    $("#title").html(docName.split("?")[0]);
-	    var create = window.location.search.indexOf("new=true") != -1;
-	    postMode = window.location.search.indexOf("mode=post") != -1;
-		if(!create && !postMode) {
+	    $("#splitter").draggable({
+			axis: "y",
+			containment: "window",
+			drag: function( event, ui ) {	
+				logSize = $("#log-container").height()-ui.position.top;
+				if(logSize>=$(window).height()) {
+					return false;
+				}
+				$("#log").css("top", ui.position.top);				
+				$("#editor").css("bottom", logSize);				
+				editor.resize();
+			},
+			stop: function() {
+				var size=$("#editor").position().top;
+				$("log-container").height(logSize);
+				$.cookie("log-size", logSize);	
+			}
+		});
+	    if(!create && !postMode) {
 			editor.getSession().setValue("");
 			get();		
 		}
@@ -296,7 +325,6 @@ function init() {
 $.extend({
     confirm: function(message, title, okAction) {
         $("<div></div>").dialog({
-            // Remove the closing 'X' from the dialog
             open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); }, 
             buttons: {
                 "Ok": function() {
