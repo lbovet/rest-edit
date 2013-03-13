@@ -122,23 +122,32 @@ function closeHeader() {
 	return false;
 }
 
-var headers=[];
-
-function addHeader(header) {
+function addHeader(header, star) {
 	$("#new-header-form").submit();
-	$("#headers").append('<div class="header"><!--<i class="icon-star-empty header-star"></i>--><span title="Edit Header" class="header-value">'+header+'</span><i class="icon-remove del-header"></i></div>');
+	$("#headers").append('<div class="header"><i class="icon-star'+ (!star ? '-empty' : '') +' header-star"></i><span title="Edit Header" class="header-value">'+header+'</span><i class="icon-remove del-header"></i></div>');
+	$(".del-header").unbind("click");
 	$(".del-header").click( function() {
 		$(this).parent().remove();	
 		updateHeaderBar();
 	});
+	$(".header-star").unbind("click");
 	$(".header-star").click( function() {
-		if($(this).hasClass("icon-star-empty")) {
-			$(this).addClass("icon-star");
-			$(this).removeClass("icon-star-empty");
-			var headers = $.cookie("headers");
+		var header = $(this).siblings(".header-value").text();
+		$(this).toggleClass("icon-star");
+		$(this).toggleClass("icon-star-empty");
+		var headers = $.cookie("headers") || [];			
+		if($(this).hasClass("icon-star")) {
+			if($.inArray(header, headers)==-1) {
+				headers.push(header);
+				$.cookie("headers", headers);
+			}
 		} else {
-			$(this).addClass("icon-star-empty");
-			$(this).removeClass("icon-star");
+			var pos = $.inArray(header, headers);
+			if(pos != -1) {
+				headers.splice(pos, 1);
+				$.cookie("headers", headers);
+				console.log("done");
+			}
 		}
 	});	
 	$(".header-value").click( function() {
@@ -148,7 +157,6 @@ function addHeader(header) {
 		updateHeaderBar();		
 	});
 	$("#editor").css("top", "80px");	
-	console.log(getHeaders());
 }
 
 function updateHeaderBar() {
@@ -263,7 +271,12 @@ function init() {
 	               initEmpty();
 	            });
 	    }
-	    editor.focus();	    
+	    editor.focus();
+	    $("#headers").text("");
+	    $.each($.cookie("headers") || [], function(pos, header) {
+			addHeader(header, true);
+	    });	
+	    updateHeaderBar();
 	} else {
 	    logError("Please specify the resource URI after a # in the address bar. Example: "+window.location+"#/mypath/myresource");
 	}
