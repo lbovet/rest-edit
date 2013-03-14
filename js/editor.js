@@ -226,7 +226,9 @@ function init() {
 			if(logSize > $(window).height() -100) {
 				logSize = $(window).height() -100;
 			}
-			$("#log-container").css("height", logSize);				
+			$("#log-container").css("height", logSize);		
+			$("#splitter").css("top", 0);
+			$("#log").css("top", $("#splitter").height());
 			$("#editor").css("bottom", logSize);
 		}
 		
@@ -235,17 +237,9 @@ function init() {
 		editor.getSession().setTabSize(2);
 		editor.getSession().setUseSoftTabs(true);
 
-		editor.commands.addCommand({
-		    name: "reformat",
-		    bindKey: {win: "Ctrl-Shift-F", mac: "Command-Shift-F"},
-		    exec: reformat
-		});
-
-		editor.commands.addCommand({
-			name: "save",
-			bindKey: {win: "Ctrl-S", mac: "Command-S"},
-			exec: postMode ? function() { logError("Use Ctrl-Enter to Post"); } : put
-		});
+		if(logSize) {	
+			editor.resize();
+		}
 		
 	    $("#reformat").click(reformat);    
 	    $("#reload").click(get);    
@@ -297,7 +291,23 @@ function init() {
 			    exec: post
 			});
 			initEmpty();
+	    } else {
+			editor.commands.addCommand({
+				name: "save",
+				bindKey: {win: "Ctrl-S", mac: "Command-S"},
+				exec: put
+			});
+			editor.commands.addCommand({
+				name: "refresh",
+				bindKey: {win: "Ctrl-R", mac: "Command-R"},
+				exec: get
+			});			
 	    }
+		editor.commands.addCommand({
+			name: "reformat",
+			bindKey: {win: "Ctrl-Shift-F", mac: "Command-Shift-F"},
+			exec: reformat
+		});
 		if(create) {
 	        var p = $.ajax(uri, { dataType:"text" });        
 	        p.done( function(data, status, xhr) 
