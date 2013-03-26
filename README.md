@@ -1,7 +1,7 @@
 rest-edit
 =========
 
-This is a pure HTML5/Javascript editor for JSON REST resources.
+This is an editor for REST resources written in pure HTML5/Javascript. IT runs in the browser.
 
 ![example 1](https://github.com/lbovet/rest-edit/blob/master/doc/rest-edit1.png?raw=true)
 
@@ -12,9 +12,10 @@ Features
 * POST
 * DELETE
 * Syntax highlighting and checking (thanks to http://ace.ajax.org)
-* Autoformat
+* Autoformat JSON
 * Log panel showing requests and errors
 * Set HTTP headers
+* Drag-and-drop files
 
 Usage
 -----

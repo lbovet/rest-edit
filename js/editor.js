@@ -41,7 +41,7 @@ function get() {
             } else {
 				var mimeType = mimeTypes[type.split(';')[0]];
 				var path;
-				if(mimeType) {
+				if(mimeType && type.split(';')[0] != "text/plain") {
 					if(mimeType[2]) {
 						if(binary) {
 							document.getElementById("frame").contentDocument.location.reload(true);
@@ -60,6 +60,7 @@ function get() {
 					path=uri.split('?')[0];
 				}
 				var mode = getModeFromPath(path);				
+				console.log(mode);
 				if(mode) {
 					editor.getSession().setMode(mode.mode);
 				} else {
@@ -191,7 +192,6 @@ function toggleStar(headerElement) {
 		if(pos != -1) {
 			headers.splice(pos, 1);
 			$.cookie("headers", headers);
-			console.log("done");
 		}
 	}	
 }
@@ -289,12 +289,10 @@ function init() {
 	    uri = uri.substring(1,uri.length);
 	    var tokens = uri.split("?")[0].split(".");
 	    var extension = tokens[tokens.length-1];
-        console.log(extension);
 	    defaultType = mimeTypesByExtension[extension];
 	    if(!defaultType) {
 			defaultType = "application/json";
 	    }
-	    console.log(defaultType);
 	    var lastSlash;
 	    if(uri.lastIndexOf("/") == uri.length-1) {
 	        lastSlash = uri.substring(0,uri.length-1).lastIndexOf("/");
