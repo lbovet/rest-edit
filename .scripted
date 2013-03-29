@@ -4,7 +4,7 @@
             "browser": true
         },
         "global": [
-            "window","console", "$", "ace"
+            "window","console", "$", "ace", "require", "dojo"
         ]
     }
 }

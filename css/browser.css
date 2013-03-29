@@ -1,0 +1,58 @@
+html, body {
+ 	font-size: 17px;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow:hidden;
+} 	
+ 
+ .light {
+ 	opacity: 0.8;	
+ }
+ 
+ .lighter {
+ 	opacity: 0.6;	
+ }
+ 
+#header {	
+    position: absolute;
+    right: 0;
+    left: 0;
+    height:48px;
+    border-bottom: 1px solid lightgray;    
+}
+ 
+#toolbar {
+	padding: 8px;
+ 	position: absolute;
+ 	right: 12px;
+}
+
+#container {
+	position: absolute;
+    top: 48px;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;	
+}
+
+#tree {
+	position: absolute;
+	padding: 8px;	
+	top: 0;
+	bottom:0;
+	left: 0;
+	right: 0;
+}
+ 
+#borderContainer {
+    width: 100%;
+    height: 100%;
+}
+
+#frame {
+	border: 0;
+	width: 100%;
+	height: 100%;
+}
