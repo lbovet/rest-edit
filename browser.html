@@ -16,10 +16,11 @@
     </head>
     <body class="tundra">  
 		<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, liveSplitters:false" id="borderContainer">
-		    <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="minSize:20, region:'leading', splitter:true" style="width: 300px;padding: 0" id="leftPane">
+		    <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="minSize:20, region:'leading', splitter:true" style="width: 400px;padding: 0" id="leftPane">
 			    <div id="header">
-			    	<div id="toolbar">
-			    		<button id="edit-switch" title="Edit Mode" class="btn"><i class="icon-pencil"></i></button>  
+			    	<div id="title"> </div>
+			    	<div id="toolbar">			    		
+			    		<button id="edit-switch" title="Edit Mode" class="btn active"><i class="icon-pencil"></i></button>  
 			    	</div>
 			    </div>
 			    <div id="container">
@@ -30,6 +31,6 @@
 		    <div style="padding:0; overflow:hidden" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
 				<iframe id="frame">
 		    </div>
-		</div>    
+		</div>    		
     </body>
 </html>

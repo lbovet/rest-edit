@@ -4,6 +4,46 @@ require([
 ], function(aspect, ready, parser, JsonRest, Observable, Tree, ObjectStoreModel, Memory, array){
 
     ready(function(){
+
+		var root;
+		var uri;
+
+		var show = function(id) {
+			if(id) {
+				uri = id;
+			}
+			if(uri) {
+				var src = $("#edit-switch").hasClass("active") ? "/editor.html#"+uri : uri;
+				$("#frame").attr("src", src);
+			}
+		};
+
+		$("#edit-switch").click( function() {
+			$("#edit-switch").toggleClass("active");
+			show();
+		});
+
+        var init = function() {	      
+	        window.onhashchange = $.noop;
+	        
+	        if(!window.location.hash) {
+				window.location.hash = "#/";
+	        }
+	        if(!window.location.hash.match(/.*\/$/)) {
+				window.location.hash = window.location.hash+"/"; 
+			}
+		    root = window.location.hash.split("#")[1];
+			$("#title").html(root);		
+			$("#title").toggle();
+			$("#title").toggle();			
+			
+			window.onhashchange = function() {
+				window.location.reload();
+			};
+	    };
+	    
+	    init();
+		
 		var store = new JsonRest({
 		    target:"",
 		    mayHaveChildren: function(object){
@@ -20,19 +60,39 @@ require([
 				}, onError).then(function(){}, function(err) { console.error(err); });
 		    },
 		    getRoot: function(onItem, onError){
-				onItem({id : "/", name: "/", folder: true});
+				onItem({id : root, name: root, folder: true});
 		    },
 			getLabel: function(object) {
 				return object.name;
 			}
 		});
 
+		var expandRecursive = function(node) {
+			return tree._expandNode(node).then(function() {
+				var children = node.getChildren();
+				if(children && children.length==1){
+					var child=children[0];
+	                if (child.hasChildren() && !child.isExpanded)
+	                {
+						expandRecursive(child);
+	                }
+				}
+			});
+		};
+
         var tree = new Tree({
             model: store,
             showRoot: false,
-            openOnClick: true,
-            onClick: function(item) {
-				$("#frame").attr("src", "/editor.html#"+item.id);
+            onClick: function(item, node) {
+				if(item.folder) {
+					if(node.isExpanded) {
+						node.collapse();
+					} else {
+						expandRecursive(node);
+					}
+				} else {
+					show(item.id);
+				}				
             },
             getIconClass: function(item, opened) {
 				if(item.folder) {
@@ -58,7 +118,7 @@ require([
 					}
 				}
 			}            
-        }, "tree");
+        }, "tree");        
         tree.startup();
     });
 });
