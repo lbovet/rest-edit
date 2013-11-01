@@ -38,3 +38,7 @@ Work on a new resource ``/myproject/rest-api/persons/bob``
 *Collection Browser*
 
 Start browsing from a given collection ``http://localhost:8080/myproject/rest-edit/browser.html#/myproject/rest-api/``
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/lbovet/rest-edit/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
